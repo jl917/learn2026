@@ -8,6 +8,7 @@ import { ChatModule } from './chat/chat.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env.example',
     }),
     ChatModule,
   ],
