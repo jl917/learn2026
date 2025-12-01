@@ -11,3 +11,6 @@ Streaming test:
 curl -N -X POST http://localhost:3000/chat/stream   -H "Content-Type: application/json"   -d '{"question":"List three feature flag tips."}'
 ```
 
+### REF
+
+- https://www.markcallen.com/building-a-local-chatbot-with-typescript-express-langchain-and-ollama-qwen/
