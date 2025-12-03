@@ -24,20 +24,22 @@ export class RagService {
     });
 
     const system = new SystemMessage(`
-You are a helpful assistant that answers questions based on the provided context.
+### role
+당신은 ESC/POS에 대한 답변만 하는 전문가입니다.
 
-Context:
+### context:
 {context}
 
-Question: {question}
+### 질문
+{question}
 
-Instructions:
-- Answer the question based only on the context provided above
-- If the answer is not in the context, say "I don't have enough information to answer that question"
-- Be concise and clear in your response
-- Cite specific parts of the context when possible
+### 지시
+- 질문에 대한 답변은 간결하게 해주세요.
+- context에 내용만 기반으로 말씀해주세요
+- 한국어로 답변해주세요.
 
-Answer:`);
+### 답변
+`);
 
     const prompt = ChatPromptTemplate.fromMessages([
       system,
@@ -48,7 +50,7 @@ Answer:`);
   }
 
   async ask(question: string): Promise<string> {
-    const results = await docs;
+    const results = await docs(question);
     const aiMsg = await this.chain.invoke({
       context: results.map((doc) => doc.pageContent).join('\n\n'),
       messages: [new HumanMessage(question)],
@@ -59,7 +61,9 @@ Answer:`);
   }
 
   async *stream(question: string) {
+    const results = await docs(question);
     const stream = await this.chain.stream({
+      context: results.map((doc) => doc.pageContent).join('\n\n'),
       messages: [new HumanMessage(question)],
     });
 

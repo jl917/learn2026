@@ -13,6 +13,7 @@ export class RagController {
     return { answer };
   }
 
+  @Post('stream')
   @Sse('stream')
   stream(@Body('question') question: string): Observable<MessageEvent> {
     if (!question) {

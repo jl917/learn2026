@@ -32,26 +32,27 @@ export const documents = [
 
 const loader = new PDFLoader(path.resolve(__dirname, '../document/ESCPOS.pdf'));
 
-export const docs = loader.load().then(async (doc) => {
-  const allSplits = await textSplitter.splitDocuments(doc);
+export const docs = (question: string) =>
+  loader.load().then(async (doc) => {
+    const allSplits = await textSplitter.splitDocuments(doc);
 
-  // console.log(doc.length);
-  // console.log(allSplits.length);
+    // console.log(doc.length);
+    // console.log(allSplits.length);
+    for (const { pageContent } of allSplits) {
+      await embeddings.embedQuery(pageContent);
+    }
+    // const vector1 = await embeddings.embedQuery(allSplits[0].pageContent);
+    // const vector2 = await embeddings.embedQuery(allSplits[1].pageContent);
 
-  // const vector1 = await embeddings.embedQuery(allSplits[0].pageContent);
-  // const vector2 = await embeddings.embedQuery(allSplits[1].pageContent);
+    // console.log('Vector 1:', vector1);
+    // console.log('Vector 2:', vector2);
 
-  // console.log('Vector 1:', vector1);
-  // console.log('Vector 2:', vector2);
+    await vectorStore.addDocuments(allSplits);
 
-  await vectorStore.addDocuments(allSplits);
+    const results1 = await vectorStore.similaritySearch(question);
 
-  const results1 = await vectorStore.similaritySearch(
-    'ESC/POS에서 돈통열기 명령어는 무엇인가요?',
-  );
+    console.log(results1);
+    console.log(results1.length);
 
-  console.log(results1[0]);
-  console.log(results1.length);
-
-  return results1;
-});
+    return results1;
+  });
