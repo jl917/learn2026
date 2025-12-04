@@ -24,9 +24,6 @@ export class RagWebService {
     });
 
     const system = new SystemMessage(`
-### role
-당신은 ESC/POS에 대한 답변만 하는 전문가입니다.
-
 ### context:
 {context}
 

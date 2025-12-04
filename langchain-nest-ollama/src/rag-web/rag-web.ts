@@ -1,10 +1,11 @@
-import { Document } from '@langchain/core/documents';
-import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
+import { CheerioWebBaseLoader } from '@langchain/community/document_loaders/web/cheerio';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { OllamaEmbeddings } from '@langchain/ollama';
+import { Chroma } from '@langchain/community/vectorstores/chroma';
 
-import { MemoryVectorStore } from '@langchain/classic/vectorstores/memory';
-import path from 'path';
+import * as fs from 'fs';
+
+const VECTORSTORE_PATH = 'http://localhost:8000';
 
 const textSplitter = new RecursiveCharacterTextSplitter({
   chunkSize: 1000,
@@ -16,43 +17,42 @@ const embeddings = new OllamaEmbeddings({
   baseUrl: 'http://localhost:11434',
 });
 
-const vectorStore = new MemoryVectorStore(embeddings);
-
-export const documents = [
-  new Document({
-    pageContent:
-      'Dogs are great companions, known for their loyalty and friendliness.',
-    metadata: { source: 'mammal-pets-doc' },
-  }),
-  new Document({
-    pageContent: 'Cats are independent pets that often enjoy their own space.',
-    metadata: { source: 'mammal-pets-doc' },
-  }),
-];
-
-const loader = new PDFLoader(path.resolve(__dirname, '../document/ESCPOS.pdf'));
+const loader = new CheerioWebBaseLoader(
+  'https://jl917.github.io/llms-full.txt',
+);
 
 export const docs = (question: string) =>
   loader.load().then(async (doc) => {
-    const allSplits = await textSplitter.splitDocuments(doc);
+    // Ensure the vectorstore directory exists before load/save operations
+    let vectorStore: Chroma | undefined;
 
-    // console.log(doc.length);
-    // console.log(allSplits.length);
-    for (const { pageContent } of allSplits) {
-      await embeddings.embedQuery(pageContent);
+    if (fs.existsSync(VECTORSTORE_PATH)) {
+      vectorStore = new Chroma(embeddings, {
+        collectionName: 'my_documents',
+        url: VECTORSTORE_PATH, // 로컬 경로
+      });
+    } else {
+      const allSplits = await textSplitter.splitDocuments(doc);
+      vectorStore = await Chroma.fromDocuments([], embeddings, {
+        collectionName: 'my_documents',
+        url: VECTORSTORE_PATH,
+      });
+      // 모든 문서의 단락을 저장한다.
+      for (let i = 0; i < allSplits.length; i++) {
+        console.log((((i + 1) / allSplits.length) * 100).toFixed(2) + '%');
+        await vectorStore.addDocuments([allSplits[i]]);
+      }
     }
-    // const vector1 = await embeddings.embedQuery(allSplits[0].pageContent);
-    // const vector2 = await embeddings.embedQuery(allSplits[1].pageContent);
 
-    // console.log('Vector 1:', vector1);
-    // console.log('Vector 2:', vector2);
+    // console.log(doc)
 
-    await vectorStore.addDocuments(allSplits);
+    if (!vectorStore) {
+      console.log('데이터 로드 에러');
+      return [];
+    }
 
-    const results1 = await vectorStore.similaritySearch(question);
-
-    console.log(results1);
-    console.log(results1.length);
-
-    return results1;
+    // 문서의 단락중 검색해서 사용한다.
+    const results = await vectorStore.similaritySearch(question);
+    console.log(results);
+    return results;
   });
