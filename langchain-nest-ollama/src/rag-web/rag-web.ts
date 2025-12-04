@@ -3,8 +3,6 @@ import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { OllamaEmbeddings } from '@langchain/ollama';
 import { Chroma } from '@langchain/community/vectorstores/chroma';
 
-import * as fs from 'fs';
-
 const VECTORSTORE_PATH = 'http://localhost:8000';
 
 const textSplitter = new RecursiveCharacterTextSplitter({
@@ -24,25 +22,25 @@ const loader = new CheerioWebBaseLoader(
 export const docs = (question: string) =>
   loader.load().then(async (doc) => {
     // Ensure the vectorstore directory exists before load/save operations
-    let vectorStore: Chroma | undefined;
+    // let vectorStore: Chroma | undefined;
+    console.log(doc);
+    // 캐시 해둠
+    const vectorStore = new Chroma(embeddings, {
+      collectionName: 'my_documents',
+      url: VECTORSTORE_PATH, // 로컬 경로
+    });
 
-    if (fs.existsSync(VECTORSTORE_PATH)) {
-      vectorStore = new Chroma(embeddings, {
-        collectionName: 'my_documents',
-        url: VECTORSTORE_PATH, // 로컬 경로
-      });
-    } else {
-      const allSplits = await textSplitter.splitDocuments(doc);
-      vectorStore = await Chroma.fromDocuments([], embeddings, {
-        collectionName: 'my_documents',
-        url: VECTORSTORE_PATH,
-      });
-      // 모든 문서의 단락을 저장한다.
-      for (let i = 0; i < allSplits.length; i++) {
-        console.log((((i + 1) / allSplits.length) * 100).toFixed(2) + '%');
-        await vectorStore.addDocuments([allSplits[i]]);
-      }
-    }
+    // 데이터 추가
+    // const allSplits = await textSplitter.splitDocuments(doc);
+    // vectorStore = await Chroma.fromDocuments([], embeddings, {
+    //   collectionName: 'my_documents',
+    //   url: VECTORSTORE_PATH,
+    // });
+    // // 모든 문서의 단락을 저장한다.
+    // for (let i = 0; i < allSplits.length; i++) {
+    //   console.log((((i + 1) / allSplits.length) * 100).toFixed(2) + '%');
+    //   await vectorStore.addDocuments([allSplits[i]]);
+    // }
 
     // console.log(doc)
 
