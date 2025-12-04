@@ -21,6 +21,17 @@ rag Streaming test:
 curl -N -X POST http://localhost:3000/rag/stream   -H "Content-Type: application/json"   -d '{"question":"List three feature flag tips."}'
 ```
 
+rag-web test
+```bash
+curl -sS -X POST http://localhost:3000/rag-web   -H "Content-Type: application/json"   -d '{"question":"Give me one CI/CD best practice."}'
+```
+
+rag-web Streaming test:
+```bash
+curl -N -X POST http://localhost:3000/rag-web/stream   -H "Content-Type: application/json"   -d '{"question":"List three feature flag tips."}'
+```
+
+
 ### REF
 
 - https://www.markcallen.com/building-a-local-chatbot-with-typescript-express-langchain-and-ollama-qwen/

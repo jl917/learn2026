@@ -6,10 +6,10 @@ import {
 import { RunnableSequence } from '@langchain/core/runnables';
 import { ChatOllama } from '@langchain/ollama';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
-import { docs } from './rag';
+import { docs } from './rag-web';
 
 @Injectable()
-export class RagService {
+export class RagWebService {
   private readonly llm: any;
   private readonly chain: any;
 
@@ -34,8 +34,6 @@ export class RagService {
 - 질문에 대한 답변은 간결하게 해주세요.
 - context에 내용만 기반으로 말씀해주세요
 - 한국어로 답변해주세요.
-
-### 답변
 `);
 
     const prompt = ChatPromptTemplate.fromMessages([
@@ -48,7 +46,6 @@ export class RagService {
 
   async ask(question: string): Promise<string> {
     const results = await docs(question);
-    console.log(results.map((doc) => doc.pageContent).join('\n\n'));
     const aiMsg = await this.chain.invoke({
       context: results.map((doc) => doc.pageContent).join('\n\n'),
       messages: [new HumanMessage(question)],

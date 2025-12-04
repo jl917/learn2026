@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { RagModule } from './rag/rag.module';
+import { RagWebModule } from './rag-web/rag-web.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { RagModule } from './rag/rag.module';
     }),
     ChatModule,
     RagModule,
+    RagWebModule,
   ],
   controllers: [AppController],
   providers: [AppService],
