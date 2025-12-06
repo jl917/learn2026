@@ -3,7 +3,7 @@ import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { OllamaEmbeddings } from '@langchain/ollama';
 import { Chroma } from '@langchain/community/vectorstores/chroma';
 
-const VECTORSTORE_PATH = 'http://localhost:8000';
+const VECTORSTORE_PATH = process.env.CHROMA_URI;
 
 const textSplitter = new RecursiveCharacterTextSplitter({
   chunkSize: 1000,
@@ -12,7 +12,7 @@ const textSplitter = new RecursiveCharacterTextSplitter({
 
 const embeddings = new OllamaEmbeddings({
   model: 'nomic-embed-text',
-  baseUrl: 'http://localhost:11434',
+  baseUrl: process.env.OLLAMA_URL,
 });
 
 const loader = new CheerioWebBaseLoader(

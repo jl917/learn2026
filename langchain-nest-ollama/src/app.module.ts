@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { RagModule } from './rag/rag.module';
 import { RagWebModule } from './rag-web/rag-web.module';
-
+import { RagMongoModule } from './rag-mongo/rag-mongo.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,6 +15,7 @@ import { RagWebModule } from './rag-web/rag-web.module';
     ChatModule,
     RagModule,
     RagWebModule,
+    RagMongoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
