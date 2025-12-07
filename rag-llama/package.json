@@ -1,0 +1,13 @@
+{
+  "name": "rag-llama",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "deno task dev",
+    "dev2": "deno run"
+  },
+  "keywords": [],
+  "author": "jl917 <julong1988@naver.com> (https://jl917.github.io/)",
+  "license": "MIT",
+  "description": ""
+}
