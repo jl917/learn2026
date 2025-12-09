@@ -1,13 +1,17 @@
 {
-  "name": "rag-llama",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "rag-llama2",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "deno task dev",
-    "dev2": "deno run"
+    "dev": "bun run index.ts"
   },
-  "keywords": [],
-  "author": "jl917 <julong1988@naver.com> (https://jl917.github.io/)",
-  "license": "MIT",
-  "description": ""
+  "devDependencies": {
+    "@llamaindex/readers": "^3.1.21",
+    "@types/bun": "latest",
+    "llamaindex": "^0.12.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
 }
