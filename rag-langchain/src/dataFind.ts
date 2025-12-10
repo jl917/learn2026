@@ -1,10 +1,13 @@
-import { nomicEmbedText as embeddings } from "./rag/embedding/ollama/nomicEmbedText";
-import { chroma as store } from "./rag/store/chroma";
+import { embeddings } from "./rag/embedding/ollama/HF_BGEM3ko";
+import { store } from "./rag/store/chroma";
 
 const vectorStore = store(embeddings);
 
 const run = async () => {
-  vectorStore.similaritySearch("岗位");
+  const result = await vectorStore.similaritySearch("자동화", 10);
+  for (let i = 0; i < result.length; i++) {
+    console.log(i, result[i]?.pageContent);
+  }
 };
 
 run();

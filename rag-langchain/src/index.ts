@@ -4,10 +4,10 @@ import { ChatOllama } from "@langchain/ollama";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { systemPrompt } from "./prompt";
 
-import { pdfDocuments as data } from "./rag/loader/pdf";
-import { splitDocuments as split } from "./rag/split/documents";
-import { nomicEmbedText as embeddings } from "./rag/embedding/ollama/nomicEmbedText";
-import { memory as store } from "./rag/store/memory";
+import { data } from "./rag/loader/pdf";
+import { split } from "./rag/split/documents";
+import { embeddings } from "./rag/embedding/ollama/HF_BGEM3ko";
+import { store } from "./rag/store/memory";
 
 const question = "open drawer";
 
