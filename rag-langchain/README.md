@@ -8,7 +8,6 @@ curl -fsSL https://bun.sh/install | bash
 bun add -d @langchain/classic
 ```
 
-
 ### chroma설치
 
 ```sh
@@ -18,11 +17,11 @@ docker run -d --rm --name chromadb -p 8000:8000 -v ./chroma:/chroma/chroma -e IS
 ### milvus설치
 
 ```sh
-# docker run -d --name milvus-standalone -p 19530:19530 milvusdb/milvus:latest
+curl -sfL https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh -o standalone_embed.sh
+bash standalone_embed.sh start
 ```
 
 ```sh
 ## 데이터 DB에 저장
 npm run update
 ```
-

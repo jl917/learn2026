@@ -2,7 +2,7 @@ import { Document } from "@langchain/core/documents";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 const textSplitter = new RecursiveCharacterTextSplitter({
-  chunkSize: 500,
+  chunkSize: 200,
   chunkOverlap: 100,
   separators: ["\n\n", "\n"],
 });
