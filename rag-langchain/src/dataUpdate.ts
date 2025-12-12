@@ -1,12 +1,9 @@
 import { data } from "./rag/loader/pdf";
 import { split } from "./rag/split/documents";
 import { embeddings } from "./rag/embedding/ollama/HF_BGEM3ko";
-import { store, createCollection, dropCollection, createMilvusIndex, dropIndex } from "./rag/store/milvus";
+import { store } from "./rag/store/milvus";
+import { randomUUIDv5 } from "bun";
 
-// createCollection()
-// dropCollection('my_documents')
-// createMilvusIndex()
-// dropIndex()
 const vectorStore = store(embeddings);
 
 const run = async () => {
@@ -15,8 +12,13 @@ const run = async () => {
   for (const s of allSplits) {
     if (index % 1 === 0) console.log(`${index} / ${allSplits.length}`);
     index++;
-    // console.log(JSON.stringify(s));
-    const document = { pageContent: s.pageContent, metadata: s.metadata };
+    const document: any = {
+      pageContent: s.pageContent,
+      // Milvus wrapper expects metadata as an object mapping field names to values.
+      // Our collection has a `metadata` field, so provide it as { metadata: <string> }.
+      metadata: s.metadata,
+    };
+    console.log(document);
     await vectorStore.addDocuments([document]);
   }
 };

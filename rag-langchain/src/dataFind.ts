@@ -4,8 +4,9 @@ import { store } from "./rag/store/milvus";
 const vectorStore = store(embeddings);
 
 const run = async () => {
-  const result = await vectorStore.similaritySearch("돈통 열기");
+  const result = await vectorStore.similaritySearchWithScore("AI 솔루션", 5);
   console.log(result);
+  console.log(result[0]?.[0].metadata);
 };
 
 run();

@@ -1,7 +1,9 @@
 import { resolve } from "path";
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { PDFReader } from "@llamaindex/readers/pdf";
+import { llamaToLangchain } from ".";
 
 const directory = resolve(import.meta.dir, "../../static/ai-use-cases-to-launch-today_ko_KR.pdf");
-const loader = new PDFLoader(directory);
+const reader = new PDFReader();
+const documents = await reader.loadData(directory);
 
-export const data = await loader.load();
+export const data = llamaToLangchain(documents);

@@ -2,9 +2,9 @@ import { Milvus } from "@langchain/community/vectorstores/milvus";
 import type { OllamaEmbeddings } from "@langchain/ollama";
 import { MilvusClient, DataType } from "@zilliz/milvus2-sdk-node";
 
-const milvus = new MilvusClient({ address: process.env.MILVUS_ADDRESS as string });
+const milvus = new MilvusClient({ address: (process.env.MILVUS_ADDRESS as string) || "localhost:19530" });
 
-const collectionName = "my_documents2";
+const collectionName = "my_documents";
 const vectorField = "embedding";
 
 export const store = (embeddings: OllamaEmbeddings) => {
@@ -13,7 +13,7 @@ export const store = (embeddings: OllamaEmbeddings) => {
     url: process.env.MILVUS_ADDRESS, // 로컬 경로
     primaryField: "id",
     vectorField,
-    textField: "pdf",
+    textField: "pageContent",
   });
 };
 
@@ -62,7 +62,7 @@ export async function createCollection() {
         autoID: true,
       },
       {
-        name: "pdf",
+        name: "pageContent",
         data_type: DataType.VarChar,
         max_length: 8192, // <-- ★ 여기서 길이 늘려 오류 해결
       },
@@ -70,6 +70,11 @@ export async function createCollection() {
         name: "embedding",
         data_type: DataType.FloatVector,
         dim: 1024,
+      },
+      {
+        name: "metadata",
+        data_type: DataType.VarChar,
+        max_length: 32768, // metadata JSON을 담기 위해 충분히 크게
       },
     ],
   });
