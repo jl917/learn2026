@@ -4,7 +4,7 @@ import { ChatOllama } from "@langchain/ollama";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { systemPrompt } from "./prompt";
 
-import { data } from "./rag/loader/pdf";
+import { loadData } from "./rag/loader";
 import { split } from "./rag/split/documents";
 import { embeddings } from "./rag/embedding/ollama/HF_BGEM3ko";
 import { store } from "./rag/store/memory";
@@ -14,6 +14,7 @@ const question = "open drawer";
 const vectorStore = store(embeddings);
 
 const docs = async (question: string) => {
+  const data = await loadData("../../static/pdf/ai-use-cases-to-launch-today_ko_KR.pdf");
   const allSplits = await split(data);
 
   for (const { pageContent } of allSplits) {

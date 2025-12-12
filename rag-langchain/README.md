@@ -24,4 +24,11 @@ bash standalone_embed.sh start
 ```sh
 ## 데이터 DB에 저장
 npm run update
+
+# 컬렉션 삭제
+bun run src/script.ts dropCollection
+# 컬렉션 생성
+bun run src/script.ts createCollection
+# 인덱스 생성
+bun run src/script.ts createMilvusIndex
 ```

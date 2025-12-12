@@ -1,12 +1,12 @@
-import { data } from "./rag/loader/pdf";
 import { split } from "./rag/split/documents";
 import { embeddings } from "./rag/embedding/ollama/HF_BGEM3ko";
 import { store } from "./rag/store/milvus";
-import { randomUUIDv5 } from "bun";
+import { loadData } from "./rag/loader";
 
 const vectorStore = store(embeddings);
 
 const run = async () => {
+  const data = await loadData("../../static/pdf/ai-use-cases-to-launch-today_ko_KR.pdf");
   const allSplits = await split(data);
   let index = 1;
   for (const s of allSplits) {
@@ -14,8 +14,6 @@ const run = async () => {
     index++;
     const document: any = {
       pageContent: s.pageContent,
-      // Milvus wrapper expects metadata as an object mapping field names to values.
-      // Our collection has a `metadata` field, so provide it as { metadata: <string> }.
       metadata: s.metadata,
     };
     console.log(document);
