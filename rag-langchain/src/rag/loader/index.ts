@@ -5,18 +5,26 @@ import { Document as LlamaDocument } from "@llamaindex/core/schema";
 import { PDFReader } from "@llamaindex/readers/pdf";
 import { CSVReader } from "@llamaindex/readers/csv";
 import { TextFileReader } from "@llamaindex/readers/text";
-import { DocxReader } from '@llamaindex/readers/docx';
-import { HTMLReader } from '@llamaindex/readers/html';
-import { ImageReader } from '@llamaindex/readers/image';
-import { JSONReader } from '@llamaindex/readers/json';
-import { MarkdownReader } from '@llamaindex/readers/markdown';
-import { ObsidianReader } from '@llamaindex/readers/obsidian';
+import { DocxReader } from "@llamaindex/readers/docx";
+import { HTMLReader } from "@llamaindex/readers/html";
+import { ImageReader } from "@llamaindex/readers/image";
+import { JSONReader } from "@llamaindex/readers/json";
+import { MarkdownReader } from "@llamaindex/readers/markdown";
+import { ObsidianReader } from "@llamaindex/readers/obsidian";
 
 const readerMap = {
   ".pdf": PDFReader,
   ".csv": CSVReader,
   ".txt": TextFileReader,
-  ".md": MarkdownReader
+  ".md": MarkdownReader,
+  ".docx": DocxReader,
+  ".html": HTMLReader,
+  ".htm": HTMLReader,
+  ".jpg": ImageReader,
+  ".jpeg": ImageReader,
+  ".png": ImageReader,
+  ".gif": ImageReader,
+  ".json": JSONReader,
 } as const;
 
 export type ReaderKeys = keyof typeof readerMap | undefined;
@@ -34,12 +42,9 @@ export const getDirectory = (path: string) => resolve(import.meta.dir, path);
 
 function getFullExtension(filename: string): ReaderKeys {
   let ext = extname(filename);
-  console.log(ext);
-  console.log(ext.indexOf("?"));
   if (ext.indexOf("?") !== -1) {
     ext = ext.slice(0, ext.indexOf("?")) as keyof typeof readerMap;
   }
-  console.log(ext);
   return ext in readerMap ? (ext as ReaderKeys) : undefined;
 }
 
